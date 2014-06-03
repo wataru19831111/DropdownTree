@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>dropDownTreeDemo</title>
+	
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" href="bootstrap/css/bootstrap.css" type="text/css">
+	<link rel="stylesheet" href="zTree/css/zTreeStyle.css" type="text/css">
+	<link rel="stylesheet" href="select2/css/select2.css" type="text/css">
+	<style type="text/css">
+		body{
+			width:1000;
+			height:1000;
+		}
+	</style>
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="zTree/js/jquery.ztree.core-3.5.js"></script>
+	<script type="text/javascript" src="select2/js/select2.js"></script>
+	<script type="text/javascript" src="dropdownTree.js"></script>
+	<script type="text/javascript">
+	
+		$(document).ready(function(){
+			$("#e1").dropdownTree({tree:{
+				url:"tree.json"
+			}});
+			$("#e7").dropdownTree({
+				tree:{
+					url:"tree.json"
+				},
+				ajax : {
+					url : "search.json",
+					dataType : 'json',
+					quietMillis : 100,
+					data : function(term, page) { // page is the one-based page number tracked by Select2
+						console.log(term,page);
+						return {
+							q : term, //search term
+							page_limit : 10, // page size
+							page : page, // page number
+						};
+					},
+					results : function(data,page) {
+						console.log(data,page);
+						var more = (page * 10) < data.total; // whether or not there are more results available
+						// notice we return the value of more so Select2 knows if more results can be loaded
+						return {
+							results : data.movies,
+							more : more
+						};
+					}
+				}
+			});
+		});
+	</script>
+  </head>
+  
+  <body>
+  
+  
+   <!-- Navbar
+    ================================================== -->
+    <div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">DropdownTree</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div><!-- /.nav-collapse -->
+      </div><!-- /.container -->
+    </div><!-- /.navbar -->
+    
+    <div class="container">
+
+		<div class="jumbotron">
+			<h1>Hello, DropdownTree!</h1>
+			<p>
+				我们做项目时经常会遇到从一个组织机构树中选人的场景。
+				通常的jQuery插件很难完美的表现这一场景：比如通常的下拉列表无法表现组织结构的层级关系，而传统的树形结构又会占据页面太大的空间。
+				而DropdownTree(下拉列表树)下拉列表树正好能完美的满足这一需求。
+			</p>
+			<p>
+				DropdownTree的灵感来自我们熟知的Select2这一jQuery插件，树形结构直接引用了国人写的zTree插件，将这两者很好的结合在了一起。
+				其中字体部分用了Bootstrap的(可选)。欢迎大家下载使用，并提出宝贵意见！
+			<p>
+		</div>
+
+			<form class="form-horizontal">
+				<div class="control-group">
+					<label class="control-label" for="inputEmail">不带搜索功能的下拉树选择框：</label>
+					<div class="controls">
+						<select id="e1" style="width:300px"></select>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="inputEmail">带搜索功能的下拉树选择框：</label>
+					<div class="controls">
+						<input id="e7" title="" tabindex="-1" class="bigdrop select2-offscreen" style="width:600px" type="hidden">
+					</div>
+				</div>
+			</form>	
+       
+    </div>
+    
+	</body>
+</html>
